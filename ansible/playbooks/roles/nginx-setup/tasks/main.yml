@@ -1,17 +1,87 @@
 ---
-- name: Install nginx
+- name: Install Nginx
   apt:
     name: nginx
-    update_cache: yes
-    state: latest
-  notify: Start nginx
-
-- name: Execute the command
-  command: hostname
-  register: command_output
-
-- name: Place command output into index.html
-  copy:
-    content: "{{ command_output.stdout }}"
-    dest: /var/www/html/index.html
+    state: "{{ nginx_version }}"
   notify: Restart nginx
+
+- name: Create Nginx configuration directory
+  file:
+    path: /etc/nginx/snippets
+    state: directory
+    mode: '0755'
+
+- name: Configure security headers snippet
+  copy:
+    dest: /etc/nginx/snippets/security-headers.conf
+    content: |
+      # Security headers
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+- name: Create Gzip configuration snippet
+  copy:
+    dest: /etc/nginx/snippets/gzip.conf
+    content: |
+      gzip on;
+      gzip_vary on;
+      gzip_proxied any;
+      gzip_comp_level 6;
+      gzip_min_length 256;
+      gzip_types
+        text/plain
+        text/css
+        text/javascript
+        application/javascript
+        application/json
+        application/xml
+        image/svg+xml;
+
+- name: Create rate limiting configuration
+  copy:
+    dest: /etc/nginx/conf.d/rate-limit.conf
+    content: |
+      # Rate limiting zones
+      limit_req_zone $binary_remote_addr zone=basic:10m rate=10r/s;
+      limit_conn_zone $binary_remote_addr zone=addr:10m;
+
+- name: Deploy optimized Nginx site configuration
+  template:
+    src: aurora-site.conf.j2
+    dest: /etc/nginx/sites-available/aurora
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Enable Aurora site
+  file:
+    src: /etc/nginx/sites-available/aurora
+    dest: /etc/nginx/sites-enabled/aurora
+    state: link
+  notify: Restart nginx
+
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Create custom index page with hostname
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0644'
+
+- name: Remove default Nginx HTML files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /var/www/html/index.nginx-debian.html
+    - /var/www/nginx-default
+
+- name: Verify Nginx configuration
+  command: nginx -t
+  changed_when: false

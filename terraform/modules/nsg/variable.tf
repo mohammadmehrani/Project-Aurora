@@ -1,64 +1,55 @@
 variable "nsg_name" {
-  description = "The name of the network security group."
+  description = "The name of the network security group"
   type        = string
 }
 
 variable "resource_group_name" {
-  description = "The name of the resource group."
+  description = "The name of the resource group"
   type        = string
 }
 
 variable "location" {
-  description = "The Azure region to deploy the network security group."
-  type        = string
-}
-
-variable "security_rule_name" {
-  description = "The name of the security rule."
+  description = "The Azure region"
   type        = string
 }
 
 variable "subnet_id" {
-  description = "The ID of the subnet."
+  description = "The ID of the subnet to associate with the NSG"
   type        = string
 }
-variable "security_rule_priority" {
-  description = "The priority of the security rule."
-  default     = 100
+
+variable "allowed_http_sources" {
+  description = "List of source IP prefixes allowed for HTTP"
+  type        = list(string)
+  default     = ["*"]
 }
 
-variable "security_rule_direction" {
-  description = "The direction specifies if rule will be evaluated on incoming or outgoing traffic."
-  default     = "Inbound"
+variable "allowed_https_sources" {
+  description = "List of source IP prefixes allowed for HTTPS"
+  type        = list(string)
+  default     = ["*"]
 }
 
-variable "security_rule_access" {
-  description = "Specifies whether network traffic is allowed or denied. Possible values are Allow and Deny."
-  default     = "Allow"
+variable "create_app_gateway_nsg" {
+  description = "Create additional NSG for Application Gateway subnet"
+  type        = bool
+  default     = false
 }
 
-variable "security_rule_protocol" {
-  description = "Network protocol this rule applies to. Possible values include Tcp, Udp, Icmp, Esp, Ah, or * (which signifies any protocol)."
-  default     = "Tcp"
+variable "app_gateway_subnet_id" {
+  description = "The ID of the Application Gateway subnet"
+  type        = string
+  default     = null
 }
 
-variable "security_rule_source_port_range" {
-  description = "The source port or range. Integer or range between 0 and 65535 or * to match any."
-  default     = "*"
+variable "app_gateway_source_prefixes" {
+  description = "Source IP prefixes for Application Gateway"
+  type        = list(string)
+  default     = ["*"]
 }
 
-variable "security_rule_destination_port_range" {
-  description = "The destination port or range. Integer or range between 0 and 65535 or * to match any."
-  default     = "80"
+variable "tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default     = {}
 }
-
-variable "security_rule_source_address_prefix" {
-  description = "CIDR or source IP range. Asterisk '*' can also be used to match all source IPs. Default tags can also be used."
-  default     = "*"
-}
-
-variable "security_rule_destination_address_prefix" {
-  description = "CIDR or destination IP range, or the asterisk '*' to match all. Default tags can also be used."
-  default     = "*"
-}
-

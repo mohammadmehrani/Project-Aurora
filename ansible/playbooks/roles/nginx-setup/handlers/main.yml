@@ -1,10 +1,17 @@
 ---
-- name: Restart nginx
-  service:
-    name: nginx
-    state: restarted
-
 - name: Start nginx
-  service:
+  systemd:
     name: nginx
     state: started
+    enabled: yes
+
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+    daemon_reload: yes
+
+- name: Reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
