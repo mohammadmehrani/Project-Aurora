@@ -162,7 +162,6 @@ module "vmss" {
   boot_diagnostics_storage_uri = module.storage_account.primary_blob_endpoint
 
   # Automatic scaling
-  instance_count       = var.vm_instance_count
   enable_scale_in      = true
   enable_scale_out     = true
   scale_in_cpu_threshold  = var.scale_in_cpu_threshold
