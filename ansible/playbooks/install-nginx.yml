@@ -1,6 +1,56 @@
 ---
-- name: Playbook for nginx-setup
+- name: Project Aurora - Nginx Deployment
   hosts: localhost
   become: true
+  gather_facts: true
+
+  vars:
+    environment: "{{ environment | default('dev') }}"
+    nginx_version: latest
+    app_port: 80
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install common dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - software-properties-common
+          - python3-pip
+          - jq
+        state: present
+
   roles:
-    - nginx-setup
+    - role: nginx-setup
+
+  post_tasks:
+    - name: Ensure nginx is running and enabled
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Collect and store instance metadata
+      copy:
+        content: |
+          {
+            "hostname": "{{ ansible_hostname }}",
+            "fqdn": "{{ ansible_fqdn }}",
+            "environment": "{{ environment }}",
+            "os_family": "{{ ansible_os_family }}",
+            "os_version": "{{ ansible_distribution_version }}",
+            "ipv4": "{{ ansible_default_ipv4.address | default('unknown') }}",
+            "deployed_at": "{{ ansible_date_time.iso8601 }}"
+          }
+        dest: /opt/aurora-metadata.json
+        mode: '0644'
+
+    - name: Create application directory
+      file:
+        path: /opt/aurora
+        state: directory
+        mode: '0755'

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Aurora - {{ environment | upper }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            color: #333;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo h1 {
+            font-size: 28px;
+            color: #667eea;
+        }
+        .logo p {
+            color: #888;
+            margin-top: 4px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .info-item .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .info-item .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            word-break: break-all;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            {% if environment == 'prod' %}
+            background: #dc3545;
+            color: white;
+            {% elif environment == 'staging' %}
+            background: #fd7e14;
+            color: white;
+            {% else %}
+            background: #28a745;
+            color: white;
+            {% endif %}
+        }
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <h1>Project Aurora</h1>
+            <p>Azure Infrastructure Automation</p>
+        </div>
+        <div style="text-align:center; margin-bottom:24px;">
+            <span class="badge">{{ environment }}</span>
+        </div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="label">Hostname</div>
+                <div class="value">{{ ansible_hostname }}</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Environment</div>
+                <div class="value">{{ environment | upper }}</div>
+            </div>
+            <div class="info-item">
+                <div class="label">OS</div>
+                <div class="value">{{ ansible_distribution }} {{ ansible_distribution_version }}</div>
+            </div>
+            <div class="info-item">
+                <div class="label">IP Address</div>
+                <div class="value">{{ ansible_default_ipv4.address | default('N/A') }}</div>
+            </div>
+            <div class="info-item">
+                <div class="label">CPU Cores</div>
+                <div class="value">{{ ansible_processor_cores }} cores</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Memory</div>
+                <div class="value">{{ (ansible_memtotal_mb / 1024) | round(1) }} GB</div>
+            </div>
+        </div>
+        <div class="footer">
+            Deployed at {{ ansible_date_time.iso8601 }} &bull; Project Aurora v2.0
+        </div>
+    </div>
+</body>
+</html>

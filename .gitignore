@@ -1,34 +1,85 @@
-# Ignore Terraform state files
+# ============================================================================
+# Project Aurora - .gitignore
+# ============================================================================
+
+# --- Terraform ---
 *.tfstate
 *.tfstate.*
-
-# Ignore any backup files
-*.backup
-
-# Ignore the .terraform directory
+*.tfstate.backup
 .terraform/
-
-# Ignore the .idea directory (for JetBrains IDEs)
-.idea/
-
-# Ignore .terraformrc (Terraform CLI configuration)
-.terraformrc
-
-# Ignore .terraform.lock.hcl (Terraform dependency lock file)
 .terraform.lock.hcl
-
-# Ignore .tfvars files that may contain sensitive information
-*.tfvars
-
-# Ignore override files as they are usually used to change Terraform behaviors
+crash.log
+crash.*.log
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-
-# Ignore CLI configuration files
+*.tfvars
+*.tfvars.json
 terraform.rc
+.terraformrc
 
-# Ignore crash log files
-crash.log
+# --- Ansible ---
+*.retry
+ansible/inventory/
+ansible/roles/**/files/*.zip
 
+# --- SSH Keys ---
+*.pem
+*.key
+*.pub
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# --- Secrets ---
+.env
+.env.*
+*.secret
+secrets/
+credentials.json
+azure_credentials.json
+
+# --- IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+*.log
+
+# --- Build/Generated ---
+build/
+dist/
+*.zip
+*.tar.gz
+*.tgz
+
+# --- Python/Ansible ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+.ansible/
+
+# --- Testing ---
+tests/*.test
+coverage/
+.terratest/
+
+# --- Documentation ---
+docs/terraform.md
+docs/architecture/terraform-graph.png
+
+# --- Makefile artifacts ---
+plan-output.txt
+tfplan
