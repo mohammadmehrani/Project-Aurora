@@ -46,5 +46,5 @@ resource "azurerm_virtual_machine_scale_set_extension" "dependency_agent" {
   type_handler_version         = var.dependency_agent_version
   auto_upgrade_minor_version   = true
 
-  depends_on = var.install_azure_monitor_agent ? [azurerm_virtual_machine_scale_set_extension.azure_monitor[0]] : [azurerm_virtual_machine_scale_set_extension.ansible]
+  depends_on = [azurerm_virtual_machine_scale_set_extension.ansible]
 }
