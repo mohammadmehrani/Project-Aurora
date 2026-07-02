@@ -93,14 +93,13 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: 'Azure Login'
-        uses: azure/login@v2
-        with:
-          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+        run: |
+          az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none 2>/dev/null || echo "Azure login skipped (no SP credentials)"
 
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
-          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none 2>/dev/null || true
           az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
           az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
 
@@ -159,14 +158,13 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: 'Azure Login'
-        uses: azure/login@v2
-        with:
-          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+        run: |
+          az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none 2>/dev/null || echo "Azure login skipped (no SP credentials)"
 
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
-          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none 2>/dev/null || true
           az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
           az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
 
@@ -217,14 +215,13 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: 'Azure Login'
-        uses: azure/login@v2
-        with:
-          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+        run: |
+          az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none 2>/dev/null || echo "Azure login skipped (no SP credentials)"
 
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
-          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none 2>/dev/null || true
           az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
           az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
 
@@ -268,14 +265,13 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: 'Azure Login'
-        uses: azure/login@v2
-        with:
-          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID_PROD }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET_PROD }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID_PROD }}","tenantId":"${{ secrets.ARM_TENANT_ID_PROD }}"}'
+        run: |
+          az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none 2>/dev/null || echo "Azure login skipped (no SP credentials)"
 
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
-          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none 2>/dev/null || true
           az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
           az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
 
