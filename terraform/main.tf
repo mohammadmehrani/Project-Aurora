@@ -14,14 +14,14 @@ module "resource_group" {
 # ============================================================================
 
 module "vnet_and_subnet" {
-  source              = "./modules/vnet_and_subnet"
-  vnet_name           = "Project-Aurora-${var.environment}-vnet"
-  subnet_name         = "Project-Aurora-${var.environment}-subnet"
-  address_space       = var.vnet_address_space
+  source                  = "./modules/vnet_and_subnet"
+  vnet_name               = "Project-Aurora-${var.environment}-vnet"
+  subnet_name             = "Project-Aurora-${var.environment}-subnet"
+  address_space           = var.vnet_address_space
   subnet_address_prefixes = var.subnet_address_prefixes
-  resource_group_name = module.resource_group.rg_name
-  location            = module.resource_group.location
-  tags                = local.common_tags
+  resource_group_name     = module.resource_group.rg_name
+  location                = module.resource_group.location
+  tags                    = local.common_tags
 
   additional_subnets = [
     {
@@ -57,19 +57,19 @@ resource "random_string" "sa_suffix" {
 }
 
 module "storage_account" {
-  source              = "./modules/storage_account"
-  sa_name             = "sa${random_string.sa_suffix.result}"
-  resource_group_name = module.resource_group.rg_name
-  location            = module.resource_group.location
-  account_replication_type = "GRS"
-  enable_https_traffic_only = true
-  min_tls_version     = "TLS1_2"
+  source                            = "./modules/storage_account"
+  sa_name                           = "sa${random_string.sa_suffix.result}"
+  resource_group_name               = module.resource_group.rg_name
+  location                          = module.resource_group.location
+  account_replication_type          = "GRS"
+  enable_https_traffic_only         = true
+  min_tls_version                   = "TLS1_2"
   infrastructure_encryption_enabled = true
-  blob_versioning_enabled = true
-  blob_change_feed_enabled = true
-  blob_delete_retention_days = 30
-  container_delete_retention_days = 30
-  tags                = local.common_tags
+  blob_versioning_enabled           = true
+  blob_change_feed_enabled          = true
+  blob_delete_retention_days        = 30
+  container_delete_retention_days   = 30
+  tags                              = local.common_tags
 }
 
 # ============================================================================
@@ -77,17 +77,17 @@ module "storage_account" {
 # ============================================================================
 
 module "key_vault" {
-  source              = "./modules/key_vault"
-  name                = "kv-project-aurora-${var.environment}-${random_string.sa_suffix.result}"
-  location            = module.resource_group.location
-  resource_group_name = module.resource_group.rg_name
-  tenant_id           = var.tenant_id
-  sku_name            = "standard"
-  soft_delete_retention_days = 90
-  purge_protection_enabled   = true
-  enable_rbac_authorization  = true
+  source                      = "./modules/key_vault"
+  name                        = "kv-project-aurora-${var.environment}-${random_string.sa_suffix.result}"
+  location                    = module.resource_group.location
+  resource_group_name         = module.resource_group.rg_name
+  tenant_id                   = var.tenant_id
+  sku_name                    = "standard"
+  soft_delete_retention_days  = 90
+  purge_protection_enabled    = true
+  enable_rbac_authorization   = true
   network_acls_default_action = "Deny"
-  network_acls_bypass       = "AzureServices"
+  network_acls_bypass         = "AzureServices"
 
   admin_ssh_private_key = tls_private_key.main.private_key_pem
   admin_ssh_public_key  = tls_private_key.main.public_key_openssh
@@ -97,8 +97,8 @@ module "key_vault" {
 }
 
 resource "random_password" "admin" {
-  count  = var.admin_password == null ? 1 : 0
-  length = 32
+  count   = var.admin_password == null ? 1 : 0
+  length  = 32
   special = true
   upper   = true
   lower   = true
@@ -132,12 +132,12 @@ module "vmss" {
   resource_group_name = module.resource_group.rg_name
   location            = module.resource_group.location
 
-  sku_name             = var.vm_sku
-  instance_count       = var.vm_instance_count
-  admin_username       = var.admin_username
-  admin_password       = var.admin_password != null ? var.admin_password : one(random_password.admin[*].result)
+  sku_name                        = var.vm_sku
+  instance_count                  = var.vm_instance_count
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password != null ? var.admin_password : one(random_password.admin[*].result)
   disable_password_authentication = var.disable_password_authentication
-  admin_ssh_public_key = tls_private_key.main.public_key_openssh
+  admin_ssh_public_key            = tls_private_key.main.public_key_openssh
 
   # Ubuntu 24.04 LTS (Noble Numbat)
   image_publisher = "Canonical"
@@ -145,13 +145,13 @@ module "vmss" {
   image_sku       = "server"
   image_version   = "latest"
 
-  upgrade_mode    = "Automatic"
-  overprovision   = false
+  upgrade_mode                = "Automatic"
+  overprovision               = false
   platform_fault_domain_count = 2
 
   # Premium SSD for better performance
   os_disk_storage_account_type = "Premium_LRS"
-  os_disk_size_gb  = 64
+  os_disk_size_gb              = 64
 
   # Network configuration
   subnet_id           = module.vnet_and_subnet.subnet_id
@@ -162,12 +162,12 @@ module "vmss" {
   boot_diagnostics_storage_uri = module.storage_account.primary_blob_endpoint
 
   # Automatic scaling
-  enable_scale_in      = true
-  enable_scale_out     = true
+  enable_scale_in         = true
+  enable_scale_out        = true
   scale_in_cpu_threshold  = var.scale_in_cpu_threshold
   scale_out_cpu_threshold = var.scale_out_cpu_threshold
-  scale_in_maximum     = var.vm_max_instance_count
-  scale_out_maximum    = var.vm_max_instance_count
+  scale_in_maximum        = var.vm_max_instance_count
+  scale_out_maximum       = var.vm_max_instance_count
 
   tags = local.common_tags
 }
@@ -177,9 +177,9 @@ module "vmss" {
 # ============================================================================
 
 module "vmss_extension" {
-  source             = "./modules/vmss_extension"
-  extension_name     = "ansibleSetup-${var.environment}"
-  vmss_id            = module.vmss.vmss_id
+  source         = "./modules/vmss_extension"
+  extension_name = "ansibleSetup-${var.environment}"
+  vmss_id        = module.vmss.vmss_id
 
   settings = {
     fileUris = [
@@ -202,11 +202,11 @@ module "bastion" {
   count  = var.enable_bastion ? 1 : 0
   source = "./modules/bastion"
 
-  bastion_name       = "Project-Aurora-${var.environment}-bastion"
-  location           = module.resource_group.location
+  bastion_name        = "Project-Aurora-${var.environment}-bastion"
+  location            = module.resource_group.location
   resource_group_name = module.resource_group.rg_name
-  vnet_name          = module.vnet_and_subnet.vnet_name
-  tags               = local.common_tags
+  vnet_name           = module.vnet_and_subnet.vnet_name
+  tags                = local.common_tags
 }
 
 # ============================================================================
@@ -217,13 +217,13 @@ module "monitoring" {
   count  = var.enable_monitoring ? 1 : 0
   source = "./modules/monitoring"
 
-  workspace_name    = "log-Project-Aurora-${var.environment}"
-  app_insights_name = "appi-Project-Aurora-${var.environment}"
-  location           = module.resource_group.location
+  workspace_name      = "log-Project-Aurora-${var.environment}"
+  app_insights_name   = "appi-Project-Aurora-${var.environment}"
+  location            = module.resource_group.location
   resource_group_name = module.resource_group.rg_name
-  vmss_id            = module.vmss.vmss_id
-  alert_email        = var.alert_email
-  tags               = local.common_tags
+  vmss_id             = module.vmss.vmss_id
+  alert_email         = var.alert_email
+  tags                = local.common_tags
 }
 
 # ============================================================================
@@ -234,9 +234,9 @@ module "backup" {
   count  = var.enable_backup ? 1 : 0
   source = "./modules/backup"
 
-  vault_name         = "rsv-Project-Aurora-${var.environment}"
-  policy_name        = "Project-Aurora-${var.environment}-backup-policy"
-  location           = module.resource_group.location
+  vault_name          = "rsv-Project-Aurora-${var.environment}"
+  policy_name         = "Project-Aurora-${var.environment}-backup-policy"
+  location            = module.resource_group.location
   resource_group_name = module.resource_group.rg_name
-  tags               = local.common_tags
+  tags                = local.common_tags
 }

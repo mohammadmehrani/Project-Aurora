@@ -1,13 +1,13 @@
 resource "azurerm_public_ip" "main" {
-  name                = var.pip_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = var.pip_allocation_method
-  sku                 = var.lb_sku
-  domain_name_label   = var.pip_domain_name_label
+  name                    = var.pip_name
+  location                = var.location
+  resource_group_name     = var.resource_group_name
+  allocation_method       = var.pip_allocation_method
+  sku                     = var.lb_sku
+  domain_name_label       = var.pip_domain_name_label
   idle_timeout_in_minutes = var.pip_idle_timeout
-  ip_version          = var.pip_ip_version
-  tags                = var.tags
+  ip_version              = var.pip_ip_version
+  tags                    = var.tags
 }
 
 resource "azurerm_lb" "main" {
@@ -57,9 +57,9 @@ resource "azurerm_lb_rule" "http" {
 resource "azurerm_lb_outbound_rule" "main" {
   count = var.enable_outbound_rule ? 1 : 0
 
-  name                    = var.outbound_rule_name
-  loadbalancer_id         = azurerm_lb.main.id
-  protocol                = var.outbound_rule_protocol
+  name                     = var.outbound_rule_name
+  loadbalancer_id          = azurerm_lb.main.id
+  protocol                 = var.outbound_rule_protocol
   allocated_outbound_ports = var.outbound_rule_ports
 
   frontend_ip_configuration {

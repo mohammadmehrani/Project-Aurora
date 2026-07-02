@@ -1,7 +1,7 @@
 locals {
   scale_rules = concat(
     var.enable_scale_out ? ["scale_out"] : [],
-    var.enable_scale_in  ? ["scale_in"] : []
+    var.enable_scale_in ? ["scale_in"] : []
   )
 }
 
