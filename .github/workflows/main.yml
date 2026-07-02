@@ -92,6 +92,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Azure Login'
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
@@ -153,6 +158,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Azure Login'
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
@@ -206,6 +216,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Azure Login'
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+
       - name: 'Create Terraform State Backend'
         continue-on-error: true
         run: |
@@ -251,6 +266,11 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 'Azure Login'
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID_PROD }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET_PROD }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID_PROD }}","tenantId":"${{ secrets.ARM_TENANT_ID_PROD }}"}'
 
       - name: 'Create Terraform State Backend'
         continue-on-error: true
