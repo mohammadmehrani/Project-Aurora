@@ -39,14 +39,14 @@ variable "force_update_tag" {
 }
 
 variable "settings" {
-  description = "The settings for the extension"
-  type        = map(any)
+  description = "The settings for the extension (JSON-serialized map)"
+  type        = any
   default     = {}
 }
 
 variable "protected_settings" {
-  description = "The protected settings for the extension"
-  type        = map(any)
+  description = "The protected settings for the extension (JSON-serialized map)"
+  type        = any
   default     = null
 }
 
