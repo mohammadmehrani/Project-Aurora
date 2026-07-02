@@ -183,9 +183,9 @@ module "vmss_extension" {
 
   settings = {
     fileUris = [
-      "https://raw.githubusercontent.com/mohammadmehrani/Project-Aurora/${var.branch_name}/ansible/setup.sh"
+      "https://raw.githubusercontent.com/${var.github_repository}/${var.branch_name}/ansible/setup.sh"
     ]
-    commandToExecute = "export BRANCH_NAME='${var.branch_name}' && export ENVIRONMENT='${var.environment}' && bash setup.sh"
+    commandToExecute = "export BRANCH_NAME='${var.branch_name}' && export GITHUB_REPO='${var.github_repository}' && export ENVIRONMENT='${var.environment}' && bash setup.sh"
   }
 
   install_azure_monitor_agent = var.enable_monitoring

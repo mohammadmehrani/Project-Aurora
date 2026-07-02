@@ -1,6 +1,5 @@
 # Project Aurora — Azure Infrastructure Automation
 
-[![CI/CD Pipeline](https://github.com/mohammadmehrani/Project-Aurora/actions/workflows/main.yml/badge.svg)](https://github.com/mohammadmehrani/Project-Aurora/actions/workflows/main.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Terraform](https://img.shields.io/badge/Terraform-≥_1.6-844FBA.svg)](https://www.terraform.io)
 [![Azure](https://img.shields.io/badge/Azure-Infrastructure-0078D4.svg)](https://azure.microsoft.com)
@@ -78,11 +77,15 @@ az account set --subscription "<SUBSCRIPTION_ID>"
 
 ### 2. Create Terraform State Backend
 
+Replace `YOUR_TFSTATE_RG`, `YOUR_TFSTATE_SA`, and `YOUR_LOCATION` with your own values:
+
 ```bash
-az group create --name Project-Aurora-tfstate --location "UK South"
-az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false
-az storage container create --name tfstate --account-name projectauroratfstate
+az group create --name YOUR_TFSTATE_RG --location YOUR_LOCATION
+az storage account create --name YOUR_TFSTATE_SA --resource-group YOUR_TFSTATE_RG --sku Standard_LRS --allow-blob-public-access false
+az storage container create --name tfstate --account-name YOUR_TFSTATE_SA
 ```
+
+Then update `providers.tf` with the names you chose.
 
 ### 3. Deploy
 

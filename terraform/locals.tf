@@ -3,7 +3,7 @@ locals {
     Project     = "Project Aurora"
     Environment = var.environment
     ManagedBy   = "Terraform"
-    Repository  = "https://github.com/mohammadmehrani/Project-Aurora"
+    Repository  = var.github_repository != null ? "https://github.com/${var.github_repository}" : "unknown"
     CostCenter  = var.cost_center
     Contact     = var.contact_email
   }

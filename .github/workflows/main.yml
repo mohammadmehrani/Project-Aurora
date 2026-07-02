@@ -16,6 +16,7 @@ env:
   TERRAFORM_DIR: ./terraform
   TF_VERSION: 1.8.0
   TF_VAR_branch_name: ${{ github.head_ref || github.ref_name }}
+  TF_VAR_github_repository: ${{ github.repository }}
 
 jobs:
   # ============================================================================
