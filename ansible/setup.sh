@@ -7,6 +7,7 @@ set -euo pipefail
 # ============================================================
 
 BRANCH_NAME="${BRANCH_NAME:-main}"
+GITHUB_REPO="${GITHUB_REPO:-your-org/your-repo}"
 ENVIRONMENT="${ENVIRONMENT:-dev}"
 LOG_FILE="/var/log/aurora-bootstrap.log"
 
@@ -57,7 +58,7 @@ EOF
 
 # --- Fetch and run Ansible playbook ---
 log "Fetching Ansible playbooks from branch: $BRANCH_NAME..."
-DOWNLOAD_URL="https://github.com/mohammadmehrani/Project-Aurora/archive/refs/heads/${BRANCH_NAME}.zip"
+DOWNLOAD_URL="https://github.com/${GITHUB_REPO}/archive/refs/heads/${BRANCH_NAME}.zip"
 
 wget -q "$DOWNLOAD_URL" -O /tmp/project-aurora.zip
 unzip -q /tmp/project-aurora.zip -d /tmp

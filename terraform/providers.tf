@@ -21,8 +21,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "Project-Aurora-tfstate"
-    storage_account_name = "projectauroratfstate"
+    resource_group_name  = "<YOUR-TFSTATE-RG>"
+    storage_account_name = "<YOUR-TFSTATE-SA>"
     container_name       = "tfstate"
     key                  = "project-aurora.tfstate"
   }

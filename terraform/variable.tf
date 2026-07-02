@@ -23,19 +23,24 @@ variable "branch_name" {
 variable "cost_center" {
   description = "The cost center for resource tracking"
   type        = string
-  default     = "engineering"
+  default     = "shared"
+}
+
+variable "github_repository" {
+  description = "Your GitHub repository (e.g. 'your-org/your-repo') for fetching Ansible scripts"
+  type        = string
 }
 
 variable "contact_email" {
   description = "The contact email for operations"
   type        = string
-  default     = "admin@project-aurora.io"
+  default     = "admin@example.com"
 }
 
 variable "alert_email" {
   description = "The email address for monitoring alerts"
   type        = string
-  default     = "alerts@project-aurora.io"
+  default     = "alerts@example.com"
 }
 
 variable "admin_username" {
