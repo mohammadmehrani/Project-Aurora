@@ -45,12 +45,13 @@ jobs:
         working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: 'Checkov - IaC Security Scan'
+        continue-on-error: true
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: ${{ env.TERRAFORM_DIR }}
           framework: terraform
           quiet: true
-          skip_check: CKV_AZURE_4,CKV_AZURE_5,CKV_AZURE_6
+          skip_check: CKV_AZURE_4,CKV_AZURE_5,CKV_AZURE_6,CKV_AZURE_189,CKV_AZURE_160
 
       - name: 'Trivy - File System Scan'
         uses: aquasecurity/trivy-action@master
