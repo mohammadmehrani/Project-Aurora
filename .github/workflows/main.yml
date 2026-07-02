@@ -92,13 +92,20 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Create Terraform State Backend'
+        continue-on-error: true
+        run: |
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
+          az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
+
       - name: 'Terraform Init'
         run: terraform init
         working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: 'Terraform Plan'
         id: plan
-        run: terraform plan -no-color -out=tfplan
+        run: terraform plan -no-color -out=tfplan 2>&1 | tee plan-output.txt
         working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: 'Upload Terraform Plan'
@@ -146,6 +153,13 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Create Terraform State Backend'
+        continue-on-error: true
+        run: |
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
+          az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
+
       - name: 'Terraform Init'
         run: terraform init
         working-directory: ${{ env.TERRAFORM_DIR }}
@@ -192,6 +206,13 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: 'Create Terraform State Backend'
+        continue-on-error: true
+        run: |
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
+          az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
+
       - name: 'Terraform Init'
         run: terraform init -reconfigure
         working-directory: ${{ env.TERRAFORM_DIR }}
@@ -230,6 +251,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 'Create Terraform State Backend'
+        continue-on-error: true
+        run: |
+          az group create --name Project-Aurora-tfstate --location "UK South" --output none
+          az storage account create --name projectauroratfstate --resource-group Project-Aurora-tfstate --sku Standard_LRS --allow-blob-public-access false --output none 2>/dev/null || true
+          az storage container create --name tfstate --account-name projectauroratfstate --output none 2>/dev/null || true
 
       - name: 'Terraform Init'
         run: terraform init -reconfigure
